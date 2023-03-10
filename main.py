@@ -9,7 +9,7 @@ from main_window import MainWindow
 from display import Display
 from info import Info
 from styles import setupTheme
-from buttons import Button
+from buttons import Button, ButtonsGrid
 
 # Import variáveis
 from variables import WINDOW_ICON_PATH
@@ -41,12 +41,9 @@ if __name__ == '__main__':
     # display.setPlaceholderText('Digite algo')
     window.addWidgetToVLayout(display)
 
-    # Button
-    button = Button('Texto do button')
-    window.addWidgetToVLayout(button)
-
-    button2 = Button('Texto do button2')
-    window.addWidgetToVLayout(button2)
+    # Grid
+    buttonsGrid = ButtonsGrid()
+    window.vLayout.addLayout(buttonsGrid)
 
     # Executa tudo
     window.adjustFixedSize()
