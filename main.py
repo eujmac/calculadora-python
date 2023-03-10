@@ -4,10 +4,11 @@ from PySide6.QtWidgets import QApplication, QLabel
 from PySide6.QtGui import QIcon
 import qdarktheme
 
-
 # Import minhas classes
 from main_window import MainWindow
 from display import Display
+from info import Info
+from styles import setupTheme
 
 # Import variáveis
 from variables import WINDOW_ICON_PATH
@@ -16,7 +17,7 @@ from variables import WINDOW_ICON_PATH
 if __name__ == '__main__':
     # Cria a aplicação
     app = QApplication(sys.argv)
-    qdarktheme.setup_theme()
+    setupTheme()
 
     window = MainWindow()
 
@@ -30,10 +31,16 @@ if __name__ == '__main__':
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(
             u'CompanyName.ProductName.SubProduct.VersionInformation')
 
+    # Info
+    info = Info('2.0 ^ 10.0 = 1024')
+    window.addWidgetToVLayout(info)
+
     # Display
     display = Display()
+
     # display.setPlaceholderText('Digite algo')
     window.addWidgetToVLayout(display)
+
     # Executa tudo
     window.adjustFixedSize()
     window.show()
