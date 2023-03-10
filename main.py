@@ -1,20 +1,23 @@
 import sys
+# Import pyside
 from PySide6.QtWidgets import QApplication, QLabel
-from main_window import MainWindow
 from PySide6.QtGui import QIcon
+import qdarktheme
+
+
+# Import minhas classes
+from main_window import MainWindow
+from display import Display
+
+# Import variáveis
 from variables import WINDOW_ICON_PATH
-
-
-def temp_label(texto):
-    label1 = QLabel(texto)
-    label1.setStyleSheet('font-size: 150px')
-
-    return label1
 
 
 if __name__ == '__main__':
     # Cria a aplicação
     app = QApplication(sys.argv)
+    qdarktheme.setup_theme()
+
     window = MainWindow()
 
     # Define o ícone
@@ -27,8 +30,10 @@ if __name__ == '__main__':
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(
             u'CompanyName.ProductName.SubProduct.VersionInformation')
 
-    window.addWidgetToVLayout(temp_label('label 1'))
-
+    # Display
+    display = Display()
+    # display.setPlaceholderText('Digite algo')
+    window.addWidgetToVLayout(display)
     # Executa tudo
     window.adjustFixedSize()
     window.show()
