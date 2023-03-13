@@ -12,6 +12,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from display import Display
+    from main_window import MainWindow
     from info import Info
 
 
@@ -31,7 +32,7 @@ class Button(QPushButton):
 
 
 class ButtonsGrid(QGridLayout):
-    def __init__(self, display: 'Display', info: 'Info', *args, **kwargs):
+    def __init__(self, display: 'Display', info: 'Info', window: 'MainWindow', *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._gridMask = [
             ['C', 'D', '^', '/'],
@@ -42,6 +43,7 @@ class ButtonsGrid(QGridLayout):
         ]
         self.display = display
         self.info = info
+        self.window = window
         self._equation = ''
         self._equationInitialValue = 'Sua conta'
         self._left = None
@@ -129,7 +131,7 @@ class ButtonsGrid(QGridLayout):
 
         # Se a pessoa clicou em um operador sem digitar nenhum número antes
         if not isValidNumber(displayText) and self._left is None:
-            print('não tem nada para colocar no valor da esquerda')
+            self._showError('Você não digitou nada')
             return
 
         # Se houver algo no número da esquerda, não fazemos nada. Aguardemos o número da direita
@@ -144,7 +146,7 @@ class ButtonsGrid(QGridLayout):
         displayText = self.display.text()
 
         if not isValidNumber(displayText):
-            print('Sem nada para a direita')
+            self._showError('Conta incompleta.')
             return
 
         self._right = float(displayText)
@@ -157,8 +159,10 @@ class ButtonsGrid(QGridLayout):
             else:
                 result = eval(self.equation)
         except ZeroDivisionError:
+            self._showError('Divisão por zero.')
             print('Zero Division Error')
         except OverflowError:
+            self._showError('Essa conta não pode ser realizada')
             print('OverFlowError')
 
         self.display.clear()
@@ -168,3 +172,18 @@ class ButtonsGrid(QGridLayout):
 
         if result == 'error':
             self._left = None
+
+    def _makeDialog(self, text):
+        msgBox = self.window.makeMsgBox()
+        msgBox.setText(text)
+        return msgBox
+
+    def _showError(self, text):
+        msgBox = self._makeDialog(text)
+        msgBox.setIcon(msgBox.Icon.Critical)
+        msgBox.exec()
+
+    def _showInfo(self, text):
+        msgBox = self._makeDialog(text)
+        msgBox.setIcon(msgBox.Icon.Information)
+        msgBox.exec()
